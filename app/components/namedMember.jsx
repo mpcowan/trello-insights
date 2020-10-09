@@ -9,7 +9,7 @@ export default function ({ member, hideName, horizontal, stat }) {
         <div className="named-member">
           <img
             className="member-avatar large"
-            src={`${member.avatar}`}
+            src={member.avatar}
             alt={combinedNames}
             title={combinedNames}
           />
@@ -23,7 +23,7 @@ export default function ({ member, hideName, horizontal, stat }) {
       <div className="named-member horizontal">
         <img
           className="member-avatar large"
-          src={`${member.avatar}`}
+          src={member.avatar}
           alt={combinedNames}
           title={combinedNames}
         />

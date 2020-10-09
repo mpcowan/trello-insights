@@ -7,7 +7,7 @@ export default function ({ member }) {
       <div className="member">
         <img
           className="member-avatar"
-          src={`${member.avatar}`}
+          src={member.avatar}
           alt={combinedNames}
           title={combinedNames}
         />
