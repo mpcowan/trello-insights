@@ -4,9 +4,12 @@
   "description": "Trello Insights Power-Up",
   "scripts": {
     "build": "parcel build app/pages/*.html",
-    "dev": "parcel app/pages/*.html"
+    "dev": "parcel app/pages/*.html",
+    "format": "prettier --write app/",
+    "lint": "prettier --check app/"
   },
   "dependencies": {
+    "@atlaskit/datetime-picker": "^10.0.5",
     "frappe-charts": "^1.5.2",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
@@ -23,6 +26,16 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.5.0",
+    "prettier": "^2.1.2"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "useTabs": false
   }
 }

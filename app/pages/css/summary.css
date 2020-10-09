@@ -1,10 +1,16 @@
 html {
-  background: #EDEFF0;
+  background: #edeff0;
 }
 
-body, button, html, input, select, textarea, a {
-  color: #17394D;
-  font: 14px "Helvetica Neue",Arial,Helvetica,sans-serif;
+body,
+button,
+html,
+input,
+select,
+textarea,
+a {
+  color: #17394d;
+  font: 14px 'Helvetica Neue', Arial, Helvetica, sans-serif;
   line-height: 18px;
 }
 
@@ -33,7 +39,11 @@ h4 {
   margin: 0;
 }
 
-textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+textarea,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'] {
   margin-bottom: 0;
 }
 
@@ -56,7 +66,7 @@ button.react-datepicker__navigation {
 .member {
   background-color: #d6dadc;
   border-radius: 16px;
-  color: #17394D;
+  color: #17394d;
   display: block;
   float: left;
   height: 32px;
@@ -67,7 +77,9 @@ button.react-datepicker__navigation {
   user-select: none;
   z-index: 0;
 }
-.member, .plugin-section-title a, .profile-image {
+.member,
+.plugin-section-title a,
+.profile-image {
   text-decoration: none;
 }
 
@@ -86,7 +98,8 @@ button.react-datepicker__navigation {
   width: 30px;
 }
 
-img, legend {
+img,
+legend {
   border: 0;
 }
 
@@ -170,7 +183,7 @@ img, legend {
 .minimal-card {
   background: #fff;
   border-radius: 4px;
-  border: 1px solid #C4C9CC;
+  border: 1px solid #c4c9cc;
   cursor: pointer;
   margin: 4px;
   padding: 6px 4px 4px 8px;
@@ -201,7 +214,7 @@ img, legend {
 }
 
 .member-with-cards .cards-list {
-  border-left: 2px solid #0079BF;
+  border-left: 2px solid #0079bf;
 }
 
 .card-with-members {
@@ -229,12 +242,12 @@ iframe.trello-card.trello-card-rendered {
 
 .comment-tooltip {
   padding: 8px !important;
-  background-color: #30364C !important;
+  background-color: #30364c !important;
   max-width: 400px;
 }
 
 .comment-tooltip.type-info.place-top:after {
-  border-top-color: #30364C !important;
+  border-top-color: #30364c !important;
 }
 
 .comment-tooltip span {
@@ -303,11 +316,11 @@ iframe.trello-card.trello-card-rendered {
 }
 
 .selected-tab {
-  background: linear-gradient(to bottom,#5BA4CF 0,#298FCA 100%);
+  background: linear-gradient(to bottom, #5ba4cf 0, #298fca 100%);
 }
 
 .custom-tooltip {
-  border: 1px solid #676D70;
+  border: 1px solid #676d70;
   background-color: #fff;
   padding: 8px;
 }
