@@ -112,12 +112,6 @@ class List extends React.Component {
   loadBoard() {
     return t.board('id', 'name', 'members')
       .then((board) => {
-        board.members = board.members.map((member) => {
-          const parsedAvatar = /\/([^/]+)\/170\.png$/.exec(member.avatar);
-          return _.extend(member, {
-            avatarHash: parsedAvatar ? parsedAvatar[1] : null,
-          });
-        });
         this.setState({ board });
       });
   }

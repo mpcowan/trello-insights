@@ -95,12 +95,6 @@ class Board extends React.Component {
       t.cards('id', 'name', 'due', 'dueComplete', 'dateLastActivity')
     )
       .then(([board, lists, cards]) => {
-        board.members = board.members.map((member) => {
-          const parsedAvatar = /\/([^/]+)\/170\.png$/.exec(member.avatar);
-          return _.extend(member, {
-            avatarHash: parsedAvatar ? parsedAvatar[1] : null,
-          });
-        });
         board.cards = cards;
         board.lists = lists.map((l, i) => _.extend(l, { pos: i }));
         this.setState({ board });

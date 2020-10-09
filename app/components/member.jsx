@@ -2,12 +2,12 @@ import React from 'react';
 
 export default function ({ member }) {
   const combinedNames = `${member.fullName} (@${member.username})`;
-  if (member.avatarHash) {
+  if (member.avatar) {
     return (
       <div className="member">
         <img
           className="member-avatar"
-          src={`https://trello-avatars.s3.amazonaws.com/${member.avatarHash}/50.png`}
+          src={`${member.avatar}`}
           alt={combinedNames}
           title={combinedNames}
         />

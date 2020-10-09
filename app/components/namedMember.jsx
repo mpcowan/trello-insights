@@ -3,13 +3,13 @@ import React from 'react';
 export default function ({ member, hideName, horizontal, stat }) {
   const combinedNames = `${member.fullName} (@${member.username})`;
 
-  if (member.avatarHash) {
+  if (member.avatar) {
     if (!horizontal) {
       return (
         <div className="named-member">
           <img
             className="member-avatar large"
-            src={`https://trello-avatars.s3.amazonaws.com/${member.avatarHash}/170.png`}
+            src={`${member.avatar}`}
             alt={combinedNames}
             title={combinedNames}
           />
@@ -23,7 +23,7 @@ export default function ({ member, hideName, horizontal, stat }) {
       <div className="named-member horizontal">
         <img
           className="member-avatar large"
-          src={`https://trello-avatars.s3.amazonaws.com/${member.avatarHash}/170.png`}
+          src={`${member.avatar}`}
           alt={combinedNames}
           title={combinedNames}
         />
