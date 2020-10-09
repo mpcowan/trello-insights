@@ -1,2 +1,1 @@
-# trello-insights
-Trello Insights Power-Up
+# Trello Insights Power-Up

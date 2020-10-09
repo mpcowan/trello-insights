@@ -1,0 +1,329 @@
+html {
+  background: #EDEFF0;
+}
+
+body, button, html, input, select, textarea, a {
+  color: #17394D;
+  font: 14px "Helvetica Neue",Arial,Helvetica,sans-serif;
+  line-height: 18px;
+}
+
+body {
+  max-width: 762px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 48px;
+}
+
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+label {
+  margin: 0 8px;
+}
+
+h1 {
+  margin-top: 24px;
+  text-align: center;
+}
+
+h4 {
+  margin: 0;
+}
+
+textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+  margin-bottom: 0;
+}
+
+.app {
+  margin-top: 24px;
+  padding: 0 16px;
+}
+
+.range-selector {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+button.react-datepicker__navigation {
+  box-shadow: unset;
+}
+
+.member {
+  background-color: #d6dadc;
+  border-radius: 16px;
+  color: #17394D;
+  display: block;
+  float: left;
+  height: 32px;
+  margin: 0 4px 4px 0;
+  overflow: hidden;
+  position: relative;
+  width: 32px;
+  user-select: none;
+  z-index: 0;
+}
+.member, .plugin-section-title a, .profile-image {
+  text-decoration: none;
+}
+
+.member-avatar {
+  height: 32px;
+  width: 32px;
+}
+.member-initials {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  text-align: center;
+  width: 30px;
+}
+
+img, legend {
+  border: 0;
+}
+
+.u-hidden {
+  display: none;
+}
+
+.members-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.member-stat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 8px;
+}
+
+.member-stat p {
+  margin: 0;
+}
+
+.member-stat .named-member .member-avatar {
+  border-radius: 32px;
+  height: 64px;
+  width: 64px;
+}
+
+.member-stat .named-member .member-initials {
+  border-radius: 32px;
+  font-size: 22px;
+  height: 64px;
+  line-height: 64px;
+  width: 64px;
+}
+
+.named-member {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 4px;
+}
+
+.named-member.horizontal {
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.named-member .member-avatar {
+  border-radius: 24px;
+  height: 48px;
+  width: 48px;
+}
+
+.named-member.horizontal .member-initials {
+  margin-right: 12px;
+}
+
+.named-member.horizontal .member-avatar {
+  margin-right: 12px;
+}
+
+.named-member .member-initials {
+  background-color: #d6dadc;
+  border-radius: 24px;
+  font-size: 20px;
+  height: 48px;
+  line-height: 48px;
+  width: 48px;
+}
+
+.number-stat {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.minimal-card {
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #C4C9CC;
+  cursor: pointer;
+  margin: 4px;
+  padding: 6px 4px 4px 8px;
+  text-align: left;
+  text-decoration: none;
+  width: 219px;
+}
+
+.minimal-card .card-name {
+  font-weight: normal;
+}
+
+.cards-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.member-with-cards {
+  margin: 8px 0;
+}
+
+.member-with-cards .cards-list {
+  border-left: 2px solid #0079BF;
+}
+
+.card-with-members {
+  align-items: center;
+  display: flex;
+  justify-content: left;
+  margin: 8px 0;
+}
+
+.card-with-members .members-list {
+  margin-left: 12px;
+}
+
+.list-stat {
+  text-align: left;
+}
+
+.trello-card-rendered {
+  margin: 8px;
+}
+
+iframe.trello-card.trello-card-rendered {
+  min-width: 316px;
+}
+
+.comment-tooltip {
+  padding: 8px !important;
+  background-color: #30364C !important;
+  max-width: 400px;
+}
+
+.comment-tooltip.type-info.place-top:after {
+  border-top-color: #30364C !important;
+}
+
+.comment-tooltip span {
+  max-width: 400px;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.color-chip {
+  border-radius: 3px;
+  display: inline-block;
+  height: 12px;
+  margin-left: 12px;
+  margin-right: 8px;
+  width: 12px;
+}
+
+.color-key {
+  display: flex;
+  align-items: center;
+}
+
+.pie-wrapper {
+  display: inline-flex;
+  height: 168px;
+  justify-content: center;
+  width: 160px;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.spread-out {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 762px;
+}
+
+.two-column {
+  align-items: center;
+  justify-items: start;
+  display: grid;
+  grid: auto-flow / 1fr 1fr;
+}
+
+.three-column {
+  justify-items: start;
+  display: grid;
+  grid: auto-flow / 1fr 1fr 1fr;
+}
+
+.five-column {
+  display: grid;
+  grid: auto-flow / 1fr 1fr 1fr 1fr 1fr;
+}
+
+.emphasis {
+  font-weight: 500;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+}
+
+.selected-tab {
+  background: linear-gradient(to bottom,#5BA4CF 0,#298FCA 100%);
+}
+
+.custom-tooltip {
+  border: 1px solid #676D70;
+  background-color: #fff;
+  padding: 8px;
+}
+
+.clickable-sankey path {
+  cursor: pointer;
+}
+
+.member-selector {
+  margin-bottom: 24px;
+}
+
+.member-select {
+  max-width: 280px;
+}
+
+.facet-selector {
+  max-width: 280px;
+}
