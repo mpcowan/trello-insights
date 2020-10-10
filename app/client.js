@@ -3,6 +3,7 @@ window.Promise = window.TrelloPowerUp.Promise;
 window.TrelloPowerUp.initialize({
   'board-buttons': () => [
     {
+      icon: '/insights.png',
       text: 'Insights',
       callback: (ctx) =>
         ctx.get('member', 'private', 'token').then((token) => {
