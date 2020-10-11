@@ -19,7 +19,7 @@ export default function ({ actions, actionsByCreator, board, before, since }) {
   const data = _.keys(hist)
     .sort()
     .map((doy) => ({
-      doy: new Date().toLocaleDateString(undefined, {
+      doy: new Date(doy).toLocaleDateString(undefined, {
         month: 'short',
         day: 'numeric',
       }),
