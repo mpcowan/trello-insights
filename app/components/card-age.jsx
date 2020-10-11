@@ -45,19 +45,27 @@ class CardAge extends React.Component {
         ts: ago(2, 'weeks'),
       },
       {
-        name: ago(3, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        name: ago(3, 'weeks')
+          .toJSDate()
+          .toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         ts: ago(3, 'weeks'),
       },
       {
-        name: ago(4, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        name: ago(4, 'weeks')
+          .toJSDate()
+          .toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         ts: ago(4, 'weeks'),
       },
       {
-        name: ago(5, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        name: ago(5, 'weeks')
+          .toJSDate()
+          .toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         ts: ago(5, 'weeks'),
       },
       {
-        name: ago(6, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        name: ago(6, 'weeks')
+          .toJSDate()
+          .toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         ts: ago(6, 'weeks'),
       },
       { name: '3 Months', ts: now().minus({ months: 3 }) },
@@ -66,7 +74,7 @@ class CardAge extends React.Component {
     ];
 
     // if yesterday is before the start of this week remove the this week bucket
-    if (buckets[1].ts.toJSDate() <= buckets[2].ts.toJSDate()) {
+    if (buckets[1].ts <= buckets[2].ts) {
       buckets.splice(2, 1);
     }
 
