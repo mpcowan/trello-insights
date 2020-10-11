@@ -3,13 +3,13 @@ import React from 'react';
 export default function ({ member, hideName, horizontal, stat }) {
   const combinedNames = `${member.fullName} (@${member.username})`;
 
-  if (member.avatar) {
+  if (member.avatar || member.avatarUrl) {
     if (!horizontal) {
       return (
         <div className="named-member">
           <img
             className="member-avatar large"
-            src={member.avatar}
+            src={member.avatar || `${member.avatarUrl}/170.png`}
             alt={combinedNames}
             title={combinedNames}
           />
@@ -21,7 +21,7 @@ export default function ({ member, hideName, horizontal, stat }) {
       <div className="named-member horizontal">
         <img
           className="member-avatar large"
-          src={member.avatar}
+          src={member.avatar || `${member.avatarUrl}/170.png`}
           alt={combinedNames}
           title={combinedNames}
         />
