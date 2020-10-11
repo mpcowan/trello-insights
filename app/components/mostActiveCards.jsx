@@ -3,13 +3,6 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import { Line, LineChart, XAxis } from 'recharts';
 
-const ZERO_HOUR = {
-  hour: 0,
-  minute: 0,
-  second: 0,
-  millisecond: 0,
-};
-
 class MostActiveCards extends React.Component {
   componentDidMount() {
     window.TrelloCards.load(document.getElementById('embedded-top-cards'));
