@@ -33,7 +33,7 @@ class MostActiveCards extends React.Component {
             const hist = _.groupBy(cardActions, 'doy');
             let i = DateTime.fromJSDate(this.props.since).startOf('day');
             while (i < DateTime.fromJSDate(this.props.before)) {
-              const iso = i.toISOString();
+              const iso = i.toISO();
               if (hist[iso] == null) {
                 hist[iso] = [];
               }
