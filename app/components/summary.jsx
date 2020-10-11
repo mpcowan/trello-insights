@@ -28,7 +28,9 @@ export default function ({ actions, actionsByCreator, board, before, since }) {
 
   const membersPlural = actionsByCreator.length !== 1;
   const actionsPlural = actions.length !== 1;
-  const rangeInDays = Math.round(DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days);
+  const rangeInDays = Math.round(
+    DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days
+  );
 
   return (
     <div className="summary">
