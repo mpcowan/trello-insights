@@ -9,16 +9,13 @@
     "lint": "prettier --check app/"
   },
   "dependencies": {
-    "frappe-charts": "^1.5.2",
     "lodash": "^4.17.20",
     "luxon": "^1.25.0",
     "react": "16.13.1",
     "react-datepicker": "^3.2.2",
     "react-dom": "16.13.1",
     "react-select": "^3.1.0",
-    "react-tooltip": "4.2.10",
-    "recharts": "1.8.5",
-    "stats-lite": "^2.2.0"
+    "recharts": "1.8.5"
   },
   "engines": {
     "node": "14.x"
