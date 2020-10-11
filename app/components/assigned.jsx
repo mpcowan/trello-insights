@@ -19,7 +19,10 @@ const CustomTooltip = (props) => {
     const { count, member } = payload[0].payload;
     return (
       <div className="custom-tooltip">
-        <p><Stat val={member.username} /> is on <Stat val={count} /> card{ count !== 1 ? 's' : ''}</p>
+        <p>
+          <Stat val={member.username} /> is on <Stat val={count} /> card
+          {count !== 1 ? 's' : ''}
+        </p>
       </div>
     );
   }
@@ -54,7 +57,7 @@ class Assigned extends React.Component {
     if (this.state.activeIndex === index) {
       return this.setState({ activeIndex: null, activeItem: data });
     }
-  	this.setState({ activeIndex: index, activeItem: data });
+    this.setState({ activeIndex: index, activeItem: data });
   }
 
   render() {
@@ -70,11 +73,7 @@ class Assigned extends React.Component {
       });
     });
 
-    const topAssignees = _(assignees)
-      .toPairs()
-      .sortBy('1')
-      .value()
-      .reverse();
+    const topAssignees = _(assignees).toPairs().sortBy('1').value().reverse();
 
     const assigneeData = topAssignees.map(([idMember, count]) => ({
       id: idMember,
@@ -96,7 +95,7 @@ class Assigned extends React.Component {
     const CustomXAxisLabel = (props) => {
       const member = JSON.parse(props.payload.value);
       return (
-        <g transform={`translate(${props.x - (avatarSize / 2)},${props.y + 4})`}>
+        <g transform={`translate(${props.x - avatarSize / 2},${props.y + 4})`}>
           <image
             xlinkHref={member.avatar}
             x={0}
@@ -107,17 +106,18 @@ class Assigned extends React.Component {
             fill="#d6dadc"
           />
         </g>
-      )
+      );
     };
 
     return (
       <div className="top-mentions">
         <h3>Card Members</h3>
         <p>
-          <Stat val={assigneeData.length} /> {pluralMembers ? 'members are' : 'member is'} assigned to cards in this list.
+          <Stat val={assigneeData.length} /> {pluralMembers ? 'members are' : 'member is'} assigned
+          to cards in this list.
         </p>
 
-        { assigneeData.length > 0 &&
+        {assigneeData.length > 0 && (
           <ResponsiveContainer width="100%" height={250}>
             <BarChart
               width={762}
@@ -130,24 +130,19 @@ class Assigned extends React.Component {
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="count" onClick={this.handleClick}>
-                {
-                  assigneeData.map((entry, index) => (
-                    <Cell
-                      cursor="pointer"
-                      fill={index === activeIndex ? '#BB8129' : '#E99E40'}
-                      key={`cell-${index}`}
-                    />
-                  ))
-                }
+                {assigneeData.map((entry, index) => (
+                  <Cell
+                    cursor="pointer"
+                    fill={index === activeIndex ? '#BB8129' : '#E99E40'}
+                    key={`cell-${index}`}
+                  />
+                ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-        }
+        )}
 
-        { activeItem != null &&
-          <div className="horizontal-scroll" id="embedded-assigned-cards" />
-        }
-
+        {activeItem != null && <div className="horizontal-scroll" id="embedded-assigned-cards" />}
       </div>
     );
   }

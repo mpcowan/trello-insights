@@ -16,7 +16,9 @@ export default function ({ member }) {
   }
   return (
     <div className="member">
-      <span className="member-initials" title={combinedNames}>{member.initials}</span>
+      <span className="member-initials" title={combinedNames}>
+        {member.initials}
+      </span>
     </div>
   );
-};
+}

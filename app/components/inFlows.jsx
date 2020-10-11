@@ -31,20 +31,23 @@ class InFlows extends React.Component {
   drawSankey() {
     const { createCardActions, moveInActions } = this.props;
     const groupedIn = _.groupBy(moveInActions, 'data.listBefore.id');
-    const dataIn = _.map(groupedIn, (val) =>
-      [
-        val[0].data.listBefore.name,
-        val[0].data.listAfter.name,
-        val.length,
-        `${val.length} card${val.length !== 1 ? 's' : ''} moved from "${val[0].data.listBefore.name}" to "${val[0].data.listAfter.name}"`,
-      ]);
+    const dataIn = _.map(groupedIn, (val) => [
+      val[0].data.listBefore.name,
+      val[0].data.listAfter.name,
+      val.length,
+      `${val.length} card${val.length !== 1 ? 's' : ''} moved from "${
+        val[0].data.listBefore.name
+      }" to "${val[0].data.listAfter.name}"`,
+    ]);
     const cardsIn = _.map(groupedIn, (val) => val);
     if (createCardActions.length > 0) {
       dataIn.push([
         '[Created]',
         createCardActions[0].data.list.name,
         createCardActions.length,
-        `${createCardActions.length} card${createCardActions.length !== 1 ? 's' : ''} created in "${createCardActions[0].data.list.name}"`,
+        `${createCardActions.length} card${createCardActions.length !== 1 ? 's' : ''} created in "${
+          createCardActions[0].data.list.name
+        }"`,
       ]);
       cardsIn.push(createCardActions);
     }
@@ -85,11 +88,22 @@ class InFlows extends React.Component {
     return (
       <div className="card-movement">
         <h3>Cards Moved In</h3>
-        <p><Stat val={moveInActions.length + createCardActions.length} /> card{ins ? 's' : ''} entered this list between {since.format('ll')} and {before.format('ll')}.</p>
+        <p>
+          <Stat val={moveInActions.length + createCardActions.length} /> card
+          {ins ? 's' : ''} entered this list between{' '}
+          {since.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}{' '}
+          and{' '}
+          {before.toLocaleDateString(undefined, {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+          .
+        </p>
 
-        { createCardActions.length + moveInActions.length > 0 &&
+        {createCardActions.length + moveInActions.length > 0 && (
           <div className="clickable-sankey" id="list-in-sankey" />
-        }
+        )}
 
         <RelatedCards idCards={this.state.selectedIdCards} compact />
       </div>

@@ -1,13 +1,13 @@
 import _ from 'lodash';
+import { DateTime } from 'luxon';
 import React from 'react';
-import {
-  Line,
-  LineChart,
-  XAxis,
-} from 'recharts';
+import { Line, LineChart, XAxis } from 'recharts';
 
 const ZERO_HOUR = {
-  hour: 0, minute: 0, second: 0, millisecond: 0,
+  hour: 0,
+  minute: 0,
+  second: 0,
+  millisecond: 0,
 };
 
 class MostActiveCards extends React.Component {
@@ -34,49 +34,48 @@ class MostActiveCards extends React.Component {
         <h3>Most Active Cards</h3>
 
         <div id="embedded-top-cards">
-          {
-            byCard.slice(0, 5).map(([idCard, cardActions]) => {
-              const cardName = cardActions[0].data.card.name;
+          {byCard.slice(0, 5).map(([idCard, cardActions]) => {
+            const cardName = cardActions[0].data.card.name;
 
-              const hist = _.groupBy(cardActions, 'doy');
-              let i = this.props.since.clone().set(ZERO_HOUR);
-              while (this.props.before.isAfter(i)) {
-                const iso = i.toISOString();
-                if (hist[iso] == null) {
-                  hist[iso] = [];
-                }
-                i = i.add(1, 'day');
+            const hist = _.groupBy(cardActions, 'doy');
+            let i = DateTime.fromJSDate(this.props.since).startOf('day');
+            while (i < DateTime.fromJSDate(this.props.before)) {
+              const iso = i.toISOString();
+              if (hist[iso] == null) {
+                hist[iso] = [];
               }
-              const data = _.keys(hist)
-                .sort()
-                .map((doy) => ({
-                  doy: moment(new Date(doy)).format('MMM D'),
-                  count: hist[doy].length,
-                }));
+              i = i.plus({ days: 1 });
+            }
+            const data = _.keys(hist)
+              .sort()
+              .map((doy) => ({
+                doy: new Date(doy).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                }),
+                count: hist[doy].length,
+              }));
 
-              return (
-                <div className="two-column" key={idCard}>
-                  <blockquote className="trello-card" key={idCard}>
-                    <a href={`https://trello.com/c/${idCard}/`}>
-                      {cardName}
-                    </a>
-                  </blockquote>
-                  <div>
-                    <LineChart width={360} height={100} data={data}>
-                      <XAxis dataKey="doy" />
-                      <Line
-                        type="monotone"
-                        dataKey="count"
-                        stroke="#61BD4F"
-                        strokeWidth={2}
-                        dot={false}
-                      />
-                    </LineChart>
-                  </div>
+            return (
+              <div className="two-column" key={idCard}>
+                <blockquote className="trello-card" key={idCard}>
+                  <a href={`https://trello.com/c/${idCard}/`}>{cardName}</a>
+                </blockquote>
+                <div>
+                  <LineChart width={360} height={100} data={data}>
+                    <XAxis dataKey="doy" />
+                    <Line
+                      type="monotone"
+                      dataKey="count"
+                      stroke="#61BD4F"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  </LineChart>
                 </div>
-              );
-            })
-          }
+              </div>
+            );
+          })}
         </div>
       </div>
     );

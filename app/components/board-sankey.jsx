@@ -1,30 +1,17 @@
 import _ from 'lodash';
 import React from 'react';
-import {
-  Layer,
-  Rectangle,
-  ResponsiveContainer,
-  Sankey,
-  Tooltip,
-} from 'recharts';
+import { Layer, Rectangle, ResponsiveContainer, Sankey, Tooltip } from 'recharts';
 import colorPalette from '../data/colors';
 
 const SankeyNode = ({ x, y, width, height, index, payload, containerWidth }) => {
   const isOut = x + width + 6 > containerWidth;
   return (
     <Layer key={`CustomNode${index}`}>
-      <Rectangle
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        fill={payload.fill}
-        fillOpacity="1"
-      />
+      <Rectangle x={x} y={y} width={width} height={height} fill={payload.fill} fillOpacity="1" />
       <text
         textAnchor={isOut ? 'end' : 'start'}
         x={isOut ? x - 6 : x + width + 6}
-        y={y + (height / 2) + 4}
+        y={y + height / 2 + 4}
         fontSize="12"
         stroke="#17394D"
       >
@@ -97,7 +84,7 @@ export default function ({ cardMoveActions, lists }) {
 
   const targetHeight = Math.max(
     56,
-    Math.max(_.keys(beforeLists).length, _.keys(afterLists).length) * 40,
+    Math.max(_.keys(beforeLists).length, _.keys(afterLists).length) * 40
   );
 
   return (

@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import moment from 'moment';
+// @ts-check
+
 import React from 'react';
 import Stat from './stat';
 
@@ -13,35 +13,32 @@ class OverdueCards extends React.Component {
   }
 
   render() {
-    const now = moment();
-    const overdue = _.filter(this.props.cards, (card) => {
+    const now = Date.now();
+    const overdue = (this.props.cards || []).filter((card) => {
       if (!card.due) {
         return false;
       }
       if (card.dueComplete) {
         return false;
       }
-      const dueMoment = moment(new Date(card.due));
-      return dueMoment.isBefore(now);
+      return new Date(card.due).getTime() < now;
     });
 
     return (
       <div className="overdue">
         <h3>Cards Past Due</h3>
-        <p><Stat val={overdue.length} /> cards past due.</p>
+        <p>
+          <Stat val={overdue.length} /> cards past due.
+        </p>
         <div className="horizontal-scroll" id="embedded-overdue-cards">
-          {
-            overdue.map((card) => (
-              <div key={card.id}>
-                <blockquote className="trello-card" key={card.id}>
-                  <a href={`https://trello.com/c/${card.id}/`}>
-                    {card.name}
-                  </a>
-                </blockquote>
-                <p>[ ] Mark Complete</p>
-              </div>
-            ))
-          }
+          {overdue.map((card) => (
+            <div key={card.id}>
+              <blockquote className="trello-card" key={card.id}>
+                <a href={`https://trello.com/c/${card.id}/`}>{card.name}</a>
+              </blockquote>
+              <p>[ ] Mark Complete</p>
+            </div>
+          ))}
         </div>
       </div>
     );

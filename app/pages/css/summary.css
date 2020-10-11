@@ -59,10 +59,6 @@ input[type='number'] {
   margin-bottom: 24px;
 }
 
-button.react-datepicker__navigation {
-  box-shadow: unset;
-}
-
 .member {
   background-color: #d6dadc;
   border-radius: 16px;

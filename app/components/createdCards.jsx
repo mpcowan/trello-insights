@@ -20,25 +20,21 @@ class CreatedCards extends React.Component {
         <h3>New Cards</h3>
 
         <p>
-          <Stat val={createCardActions.length} /> { pluralize ? 'cards' : 'card' } created.
+          <Stat val={createCardActions.length} /> {pluralize ? 'cards' : 'card'} created.
         </p>
 
         <div className="horizontal-scroll" id="embedded-created-cards">
-          {
-            createCardActions.slice(0, 3).map((action) => {
-              const cardName = action.data.card.name;
-              const idCard = action.data.card.id;
-              return (
-                <div className="named-member" key={idCard}>
-                  <blockquote className="trello-card-compact" key={idCard}>
-                    <a href={`https://trello.com/c/${idCard}/`}>
-                      {cardName}
-                    </a>
-                  </blockquote>
-                </div>
-              );
-            })
-          }
+          {createCardActions.slice(0, 3).map((action) => {
+            const cardName = action.data.card.name;
+            const idCard = action.data.card.id;
+            return (
+              <div className="named-member" key={idCard}>
+                <blockquote className="trello-card-compact" key={idCard}>
+                  <a href={`https://trello.com/c/${idCard}/`}>{cardName}</a>
+                </blockquote>
+              </div>
+            );
+          })}
         </div>
       </div>
     );

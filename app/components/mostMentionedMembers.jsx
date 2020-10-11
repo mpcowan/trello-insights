@@ -24,19 +24,19 @@ export default function ({ commentCardActions, boardMembers }) {
 
   mentions = _.omit(mentions, ['@board', '@card']);
 
-  const topMentions = _(mentions)
-    .toPairs()
-    .sortBy('1')
-    .value()
-    .reverse();
+  const topMentions = _(mentions).toPairs().sortBy('1').value().reverse();
 
-  const mentionData = topMentions.map(([username, count]) => ({
-    username,
-    count,
-  })).map((mention) =>
-    _.extend(mention, {
-      member: _.find(boardMembers, ['username', mention.username.substring(1)]),
-    })).filter((mention) => mention.member != null)
+  const mentionData = topMentions
+    .map(([username, count]) => ({
+      username,
+      count,
+    }))
+    .map((mention) =>
+      _.extend(mention, {
+        member: _.find(boardMembers, ['username', mention.username.substring(1)]),
+      })
+    )
+    .filter((mention) => mention.member != null)
     .slice(0, 6);
 
   const pluralMembers = Object.keys(mentions).length !== 1;
@@ -46,20 +46,19 @@ export default function ({ commentCardActions, boardMembers }) {
     <div className="top-mentions">
       <h3>Most Mentioned Members</h3>
       <p>
-        <Stat val={Object.keys(mentions).length} /> {pluralMembers ? 'members were' : 'member was'} mentioned <Stat val={totalMentions} /> {pluralTimes ? 'times' : 'time'}.
+        <Stat val={Object.keys(mentions).length} /> {pluralMembers ? 'members were' : 'member was'}{' '}
+        mentioned <Stat val={totalMentions} /> {pluralTimes ? 'times' : 'time'}.
       </p>
       <div className="three-column">
-        {
-          mentionData.map((mention) => (
-            <NamedMember
-              member={mention.member}
-              key={mention.member.id}
-              horizontal
-              stat={`Mentioned ${mention.count} time${mention.count === 1 ? '' : 's'}`}
-            />
-          ))
-        }
+        {mentionData.map((mention) => (
+          <NamedMember
+            member={mention.member}
+            key={mention.member.id}
+            horizontal
+            stat={`Mentioned ${mention.count} time${mention.count === 1 ? '' : 's'}`}
+          />
+        ))}
       </div>
     </div>
   );
-};
+}

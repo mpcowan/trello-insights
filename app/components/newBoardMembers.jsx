@@ -1,5 +1,6 @@
+// @ts-check
+
 import _ from 'lodash';
-import moment from 'moment';
 import React from 'react';
 
 import NamedMember from './namedMember';
@@ -17,14 +18,24 @@ export default function ({ addMemberToBoardActions }) {
     <div className="addMemberToBoard">
       <h3>Newest Board Members</h3>
       <p>
-        <Stat val={added.length} /> members were added to this board while <Stat val={joined.length} /> joined it themselves.
+        <Stat val={added.length} /> members were added to this board while{' '}
+        <Stat val={joined.length} /> joined it themselves.
       </p>
       <div className="three-column">
-        {
-          newMembers.map((m) => (
-            <NamedMember key={m.id} member={m} horizontal stat={moment(m.date).format('lll')} />
-          ))
-        }
+        {newMembers.map((m) => (
+          <NamedMember
+            key={m.id}
+            member={m}
+            horizontal
+            stat={m.date.toLocaleDateString(undefined, {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+            })}
+          />
+        ))}
       </div>
     </div>
   );

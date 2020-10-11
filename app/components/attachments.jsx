@@ -1,14 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import {
-  CartesianGrid,
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { CartesianGrid, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import Stat from './stat';
 
@@ -44,62 +36,61 @@ export default function ({ cards }) {
     <div>
       <h3>Attachments</h3>
       <p>
-        There { pluralize ? 'are' : 'is' } <Stat val={attachments.length} /> attachment{ pluralize ? 's' : '' }.
+        There {pluralize ? 'are' : 'is'} <Stat val={attachments.length} /> attachment
+        {pluralize ? 's' : ''}.
       </p>
 
-      { images.length > 0 &&
+      {images.length > 0 && (
         <div>
           <h4>Images</h4>
           <div className="horizontal-scroll">
-            {
-              images.map((image) => (
-                <div
-                  key={image.id}
-                  style={{
-                    margin: '6px',
-                    backgroundColor: '#D6DADC',
-                    borderRadius: '4px',
-                    position: 'relative',
-                  }}
+            {images.map((image) => (
+              <div
+                key={image.id}
+                style={{
+                  margin: '6px',
+                  backgroundColor: '#D6DADC',
+                  borderRadius: '4px',
+                  position: 'relative',
+                }}
+              >
+                <a
+                  href={image.url}
+                  target="_blank"
+                  title={image.name}
+                  rel="noopener noreferrer"
+                  width={200}
+                  height={133}
                 >
-                  <a
-                    href={image.url}
-                    target="_blank"
-                    title={image.name}
-                    rel="noopener noreferrer"
+                  <img
+                    alt={image.name}
+                    src={_.get(
+                      _.chain(image.previews)
+                        .filter((p) => p.scaled && p.height > 100)
+                        .first()
+                        .value(),
+                      'url',
+                      image.previews.reverse()[0].url
+                    )}
                     width={200}
                     height={133}
-                  >
-                    <img
-                      alt={image.name}
-                      src={
-                        _.get(
-                          _.chain(image.previews)
-                          .filter((p) => p.scaled && p.height > 100)
-                          .first()
-                          .value(),
-                          'url',
-                          image.previews.reverse()[0].url
-                        )
-                      }
-                      width={200}
-                      height={133}
-                      style={{ objectFit: 'scale-down' }}
-                    />
-                  </a>
-                </div>
-              ))
-            }
+                    style={{ objectFit: 'scale-down' }}
+                  />
+                </a>
+              </div>
+            ))}
           </div>
 
           <p />
         </div>
-      }
+      )}
 
-      { links.length > 0 &&
+      {links.length > 0 && (
         <div>
           <h4>Links</h4>
-          <p>There are {links.length} attached links across {domains.length} sites.</p>
+          <p>
+            There are {links.length} attached links across {domains.length} sites.
+          </p>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart
               width={762}
@@ -115,7 +106,7 @@ export default function ({ cards }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      }
+      )}
     </div>
   );
-};
+}

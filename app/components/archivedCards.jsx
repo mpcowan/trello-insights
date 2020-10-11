@@ -20,25 +20,21 @@ class ArchivedCards extends React.Component {
         <h3>Archived Cards</h3>
 
         <p>
-          <Stat val={archiveActions.length} /> { pluralize ? 'cards' : 'card' } archived.
+          <Stat val={archiveActions.length} /> {pluralize ? 'cards' : 'card'} archived.
         </p>
 
         <div className="horizontal-scroll" id="embedded-archived-cards">
-          {
-            archiveActions.slice(0, 3).map((action) => {
-              const cardName = action.data.card.name;
-              const idCard = action.data.card.id;
-              return (
-                <div className="named-member" key={idCard}>
-                  <blockquote className="trello-card-compact" key={idCard}>
-                    <a href={`https://trello.com/c/${idCard}/`}>
-                      {cardName}
-                    </a>
-                  </blockquote>
-                </div>
-              );
-            })
-          }
+          {archiveActions.slice(0, 3).map((action) => {
+            const cardName = action.data.card.name;
+            const idCard = action.data.card.id;
+            return (
+              <div className="named-member" key={idCard}>
+                <blockquote className="trello-card-compact" key={idCard}>
+                  <a href={`https://trello.com/c/${idCard}/`}>{cardName}</a>
+                </blockquote>
+              </div>
+            );
+          })}
         </div>
       </div>
     );

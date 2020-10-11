@@ -1,5 +1,7 @@
+// @ts-check
+
 import _ from 'lodash';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 import {
   CartesianGrid,
@@ -12,8 +14,6 @@ import {
   YAxis,
 } from 'recharts';
 
-window.moment = moment;
-
 const ZERO_HOUR = {
   hour: 0,
   minute: 0,
@@ -23,25 +23,27 @@ const ZERO_HOUR = {
 
 export default function ({ actions, idList, before, since }) {
   const hist = _.groupBy(actions, 'doy');
-  let i = since.clone().set(ZERO_HOUR);
-  while (before.isAfter(i)) {
-    const iso = i.toISOString();
+  let i = DateTime.fromJSDate(since).set(ZERO_HOUR);
+  while (i < DateTime.fromJSDate(before)) {
+    const iso = i.toISO();
     if (hist[iso] == null) {
       hist[iso] = [];
     }
-    i = i.add(1, 'day');
+    i = i.plus({ days: 1 });
   }
   const data = _.keys(hist)
     .sort()
     .map((doy) => ({
-      doy: moment(new Date(doy)).format('MMM D'),
+      doy: new Date(doy).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
       'Created In': _.filter(hist[doy], (a) => {
         return a.type === 'createCard' && a.data.list.id === idList;
       }).length,
       'Moved Into': _.filter(hist[doy], (a) => {
-        return a.type === 'updateCard:idList' &&
+        return (
+          a.type === 'updateCard:idList' &&
           a.data.old.idList !== idList &&
           a.data.card.idList === idList
+        );
       }).length,
       'Moved Out': _.filter(hist[doy], (a) => {
         return a.type === 'updateCard:idList' && a.data.old.idList === idList;

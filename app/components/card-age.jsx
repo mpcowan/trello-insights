@@ -1,5 +1,7 @@
+// @ts-check
+
 import _ from 'lodash';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 import {
   Bar,
@@ -13,9 +15,10 @@ import {
 } from 'recharts';
 import RelatedCards from './related-cards';
 
-const atMidnight = (m) => m.hour(0).minute(0).second(0);
-const ago = (num, type) => atMidnight(now().subtract(num, type)).day(0);
-const now = () => moment();
+// these all give back Luxon DateTime objects
+const atMidnight = (m) => m.startOf('day');
+const ago = (num, type) => atMidnight(now().minus({ [type]: num })).set({ day: 0 });
+const now = () => DateTime.local();
 
 class CardAge extends React.Component {
   constructor(props) {
@@ -32,29 +35,45 @@ class CardAge extends React.Component {
 
     const buckets = [
       { name: 'Today', ts: atMidnight(now()) },
-      { name: 'Yesterday', ts: atMidnight(now().subtract(1, 'day')) },
-      { name: 'This Week', ts: atMidnight(now().day(0)) },
-      { name: 'Last Week', ts: atMidnight(now().subtract(1, 'week').day(0)) },
-      { name: ago(2, 'weeks').format('MMM Do'), ts: ago(2, 'weeks') },
-      { name: ago(3, 'weeks').format('MMM Do'), ts: ago(3, 'weeks') },
-      { name: ago(4, 'weeks').format('MMM Do'), ts: ago(4, 'weeks') },
-      { name: ago(5, 'weeks').format('MMM Do'), ts: ago(5, 'weeks') },
-      { name: ago(6, 'weeks').format('MMM Do'), ts: ago(6, 'weeks') },
-      { name: '3 Months', ts: now().subtract(3, 'months') },
-      { name: '1 Year', ts: now().subtract(1, 'year') },
-      { name: '>1 Year', ts: now().subtract(100, 'years') },
+      { name: 'Yesterday', ts: atMidnight(now().minus({ days: 1 })) },
+      { name: 'This Week', ts: atMidnight(now().set({ day: 0 })) },
+      { name: 'Last Week', ts: atMidnight(now().minus({ weeks: 1 }).set({ day: 0 })) },
+      {
+        name: ago(2, 'weeks')
+          .toJSDate()
+          .toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        ts: ago(2, 'weeks'),
+      },
+      {
+        name: ago(3, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        ts: ago(3, 'weeks'),
+      },
+      {
+        name: ago(4, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        ts: ago(4, 'weeks'),
+      },
+      {
+        name: ago(5, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        ts: ago(5, 'weeks'),
+      },
+      {
+        name: ago(6, 'weeks').toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        ts: ago(6, 'weeks'),
+      },
+      { name: '3 Months', ts: now().minus({ months: 3 }) },
+      { name: '1 Year', ts: now().minus({ years: 1 }) },
+      { name: '>1 Year', ts: now().minus({ years: 100 }) },
     ];
 
     // if yesterday is before the start of this week remove the this week bucket
-    if (buckets[1].ts.isSameOrBefore(buckets[2].ts)) {
+    if (buckets[1].ts.toJSDate() <= buckets[2].ts.toJSDate()) {
       buckets.splice(2, 1);
     }
 
     let counted = [];
     const data = _.map(buckets, (bucket) => {
       const cards = _.chain(list.cards)
-        .filter((c) =>
-          moment(new Date(c.dateLastActivity)).isAfter(bucket.ts))
+        .filter((c) => bucket.ts.toJSDate() < new Date(c.dateLastActivity))
         .map((c) => c.id)
         .without(...counted)
         .value();
@@ -101,18 +120,14 @@ class CardAge extends React.Component {
             <YAxis type="category" dataKey="name" interval={0} width={80} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
-            <Bar
-              dataKey="cards"
-              onClick={barClick}>
-              {
-                data.map((entry, index) => (
-                  <Cell
-                    cursor="pointer"
-                    fill={index === activeIndex ? '#00AECC' : '#0082A0'}
-                    key={`cell-${index}`}
-                  />
-                ))
-              }
+            <Bar dataKey="cards" onClick={barClick}>
+              {data.map((entry, index) => (
+                <Cell
+                  cursor="pointer"
+                  fill={index === activeIndex ? '#00AECC' : '#0082A0'}
+                  key={`cell-${index}`}
+                />
+              ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>

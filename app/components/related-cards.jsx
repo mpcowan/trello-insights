@@ -26,9 +26,7 @@ class RelatedCards extends React.Component {
   }
 
   render() {
-    return (
-      <div className="horizontal-scroll" ref={this.ref} />
-    );
+    return <div className="horizontal-scroll" ref={this.ref} />;
   }
 }
 

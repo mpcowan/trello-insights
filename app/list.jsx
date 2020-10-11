@@ -1,8 +1,10 @@
 /* global google */
 
+// @ts-check
+
 import _ from 'lodash';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import normalizeAction from './utils/normalizeAction';
@@ -19,13 +21,6 @@ import OverdueCards from './components/overdue';
 
 window.Promise = window.TrelloPowerUp.Promise;
 
-const ZERO_HOUR = {
-  hour: 0,
-  minute: 0,
-  second: 0,
-  millisecond: 0,
-};
-
 const t = window.TrelloPowerUp.iframe();
 google.charts.load('current', { packages: ['sankey'] });
 
@@ -38,8 +33,8 @@ class List extends React.Component {
     this.loadBoard();
     this.loadList();
 
-    const since = moment().subtract(2, 'weeks').set(ZERO_HOUR);
-    const before = moment();
+    const since = DateTime.local().minus({ weeks: 2 }).startOf('day').toJSDate();
+    const before = new Date();
 
     google.charts.setOnLoadCallback(this.loadedGoogleCharts.bind(this));
 
@@ -56,22 +51,21 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    return t.get('member', 'private', 'token')
-      .then((token) => {
-        this.setState({ token });
-        this.loadBoardActions(this.state.idBoard, token, this.state.since, this.state.before);
-      });
+    return t.get('member', 'private', 'token').then((token) => {
+      this.setState({ token });
+      this.loadBoardActions(this.state.idBoard, token, this.state.since, this.state.before);
+    });
   }
 
   setSince(since) {
-    if (!since || !since.isValid()) {
+    if (!since) {
       return;
     }
     const { before } = this.state;
-    if (since.isAfter(before)) {
+    if (before < since) {
       return;
     }
-    if (before.diff(since, 'days') > 93) {
+    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days > 93) {
       console.error('93 days is maximum range');
       return;
     }
@@ -80,17 +74,17 @@ class List extends React.Component {
   }
 
   setBefore(before) {
-    if (!before || !before.isValid()) {
+    if (!before) {
       return;
     }
     const { since } = this.state;
-    if (since.isAfter(before)) {
+    if (before < since) {
       return;
     }
-    if (before.isAfter(moment())) {
+    if (new Date() < before) {
       return;
     }
-    if (before.diff(since, 'days') > 93) {
+    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days > 93) {
       console.error('93 days is maximum range');
       return;
     }
@@ -103,17 +97,15 @@ class List extends React.Component {
   }
 
   loadList() {
-    return t.list('all')
-      .then((list) => {
-        this.setState({ list });
-      });
+    return t.list('all').then((list) => {
+      this.setState({ list });
+    });
   }
 
   loadBoard() {
-    return t.board('id', 'name', 'members')
-      .then((board) => {
-        this.setState({ board });
-      });
+    return t.board('id', 'name', 'members').then((board) => {
+      this.setState({ board });
+    });
   }
 
   loadBoardActions(idBoard, token, since, before, pagedActions) {
@@ -136,26 +128,36 @@ class List extends React.Component {
     fetch(`https://api.trello.com/1/boards/${idBoard}/actions?${qs}`)
       .then((resp) => resp.json())
       .then((actions) => {
-        const inRange = _.filter(actions, (a) =>
-          a.memberCreator != null && moment(new Date(a.date)).isAfter(since));
+        const inRange = _.filter(
+          actions,
+          (a) => a.memberCreator != null && since < new Date(a.date)
+        );
 
         if (inRange.length === reqData.limit) {
           // all in range, request another page worth
-          this.loadBoardActions(idBoard, token, since, before, (pagedActions || []).concat(actions));
+          this.loadBoardActions(
+            idBoard,
+            token,
+            since,
+            before,
+            (pagedActions || []).concat(actions)
+          );
           return;
         }
 
         const normalized = _.map((pagedActions || []).concat(inRange), (a) =>
           _.extend(a, {
             type: normalizeAction(a),
-            doy: moment(new Date(a.date)).set(ZERO_HOUR).toISOString(),
-          })).filter((a) => {
-            const targetList = _.get(a, 'data.list.id') === this.state.idList ||
-              _.get(a, 'data.old.idList') === this.state.idList ||
-              _.get(a, 'data.listBefore.id') === this.state.idList ||
-              _.get(a, 'data.listAfter.id') === this.state.idList;
-            return targetList;
-          });
+            doy: DateTime.fromJSDate(new Date(a.date)).startOf('day').toISO(),
+          })
+        ).filter((a) => {
+          const targetList =
+            _.get(a, 'data.list.id') === this.state.idList ||
+            _.get(a, 'data.old.idList') === this.state.idList ||
+            _.get(a, 'data.listBefore.id') === this.state.idList ||
+            _.get(a, 'data.listAfter.id') === this.state.idList;
+          return targetList;
+        });
 
         const byType = _.groupBy(normalized, 'type');
         const byCreator = _(normalized)
@@ -178,9 +180,7 @@ class List extends React.Component {
   render() {
     const { board, gcharts, idList, list } = this.state;
     if (!this.state.actions || !board || !list || !gcharts) {
-      return (
-        <p>Loading activity on the list...</p>
-      );
+      return <p>Loading activity on the list...</p>;
     }
 
     const actions = this.state.actions.normalized;
@@ -189,17 +189,10 @@ class List extends React.Component {
       return (
         <div className="App">
           <div className="range-selector">
-            <button
-              disabled
-              onClick={() => this.setState({ tab: 'overview' })}
-            >
-            Overview
+            <button disabled onClick={() => this.setState({ tab: 'overview' })}>
+              Overview
             </button>
-            <button
-              onClick={() => this.setState({ tab: 'activity' })}
-            >
-            Activity
-            </button>
+            <button onClick={() => this.setState({ tab: 'activity' })}>Activity</button>
           </div>
 
           <hr />
@@ -214,10 +207,7 @@ class List extends React.Component {
 
           <hr />
 
-          <Assigned
-            cards={list.cards}
-            members={board.members}
-          />
+          <Assigned cards={list.cards} members={board.members} />
 
           <hr />
 
@@ -232,16 +222,9 @@ class List extends React.Component {
       return (
         <div className="App">
           <div className="range-selector">
-            <button
-              onClick={() => this.setState({ tab: 'overview' })}
-            >
-            Overview
-            </button>
-            <button
-              disabled
-              onClick={() => this.setState({ tab: 'activity' })}
-            >
-            Activity
+            <button onClick={() => this.setState({ tab: 'overview' })}>Overview</button>
+            <button disabled onClick={() => this.setState({ tab: 'activity' })}>
+              Activity
             </button>
           </div>
 
@@ -252,23 +235,23 @@ class List extends React.Component {
             <DatePicker
               id="since-picker"
               selected={this.state.since}
+              onChange={(date) => this.setSince(date)}
               selectsStart
               startDate={this.state.since}
               endDate={this.state.before}
-              minDate={this.state.before.clone().subtract(93, 'days')}
-              maxDate={this.state.before.clone().subtract(1, 'day')}
-              onChange={(since) => this.setSince(since)}
+              minDate={DateTime.fromJSDate(this.state.before).minus({ days: 93 }).toJSDate()}
+              maxDate={DateTime.fromJSDate(this.state.before).minus({ days: 1 }).toJSDate()}
             />
             <label htmlFor="before-picker">To: </label>
             <DatePicker
               id="before-picker"
               selected={this.state.before}
+              onChange={(date) => this.setBefore(date)}
               selectsEnd
               startDate={this.state.since}
               endDate={this.state.before}
-              minDate={this.state.since.clone().add(1, 'day')}
-              maxDate={moment()}
-              onChange={(before) => this.setBefore(before)}
+              maxDate={new Date()}
+              minDate={this.state.since}
             />
           </div>
 
@@ -310,9 +293,7 @@ class List extends React.Component {
       );
     }
 
-    return (
-      <div />
-    );
+    return <div />;
   }
 }
 

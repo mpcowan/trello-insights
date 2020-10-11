@@ -42,20 +42,23 @@ class OutFlows extends React.Component {
   drawSankey() {
     const { archiveActions, moveOutActions } = this.props;
     const groupedOut = _.groupBy(moveOutActions, 'data.listAfter.id');
-    const dataOut = _.map(groupedOut, (val) =>
-      [
-        val[0].data.listBefore.name,
-        val[0].data.listAfter.name,
-        val.length,
-        `${val.length} card${val.length !== 1 ? 's' : ''} moved from "${val[0].data.listBefore.name}" to "${val[0].data.listAfter.name}"`,
-      ]);
+    const dataOut = _.map(groupedOut, (val) => [
+      val[0].data.listBefore.name,
+      val[0].data.listAfter.name,
+      val.length,
+      `${val.length} card${val.length !== 1 ? 's' : ''} moved from "${
+        val[0].data.listBefore.name
+      }" to "${val[0].data.listAfter.name}"`,
+    ]);
     const cardsOut = _.map(groupedOut, (val) => val);
     if (archiveActions.length > 0) {
       dataOut.push([
         archiveActions[0].data.list.name,
         '[Archive]',
         archiveActions.length,
-        `${archiveActions.length} card${archiveActions.length !== 1 ? 's' : ''} archived from "${archiveActions[0].data.list.name}"`,
+        `${archiveActions.length} card${archiveActions.length !== 1 ? 's' : ''} archived from "${
+          archiveActions[0].data.list.name
+        }"`,
       ]);
       cardsOut.push(archiveActions);
     }
@@ -96,11 +99,22 @@ class OutFlows extends React.Component {
     return (
       <div className="card-movement">
         <h3>Cards Moved Out</h3>
-        <p><Stat val={moveOutActions.length + archiveActions.length} /> card{outs ? 's' : ''} left this list between {since.format('ll')} and {before.format('ll')}.</p>
+        <p>
+          <Stat val={moveOutActions.length + archiveActions.length} /> card
+          {outs ? 's' : ''} left this list between{' '}
+          {since.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}{' '}
+          and{' '}
+          {before.toLocaleDateString(undefined, {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+          .
+        </p>
 
-        { archiveActions.length + moveOutActions.length > 0 &&
+        {archiveActions.length + moveOutActions.length > 0 && (
           <div className="clickable-sankey" id="list-out-sankey" />
-        }
+        )}
 
         <RelatedCards idCards={this.state.selectedIdCards} compact />
       </div>

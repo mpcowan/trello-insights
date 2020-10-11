@@ -47,21 +47,19 @@ class ListSankey extends React.Component {
     const { moveInActions, moveOutActions } = this.props;
     const groupedIn = _.groupBy(moveInActions, 'data.listBefore.id');
     const groupedOut = _.groupBy(moveOutActions, 'data.listAfter.id');
-    const dataIn = _.map(groupedIn, (val) =>
-      [
-        val[0].data.listBefore.name,
-        val[0].data.listAfter.name,
-        val.length,
-        `${val[0].data.listBefore.name} -> ${val[0].data.listAfter.name}`,
-      ]);
+    const dataIn = _.map(groupedIn, (val) => [
+      val[0].data.listBefore.name,
+      val[0].data.listAfter.name,
+      val.length,
+      `${val[0].data.listBefore.name} -> ${val[0].data.listAfter.name}`,
+    ]);
     const cardsIn = _.map(groupedIn, (val) => val);
-    const dataOut = _.map(groupedOut, (val) =>
-      [
-        val[0].data.listBefore.name,
-        val[0].data.listAfter.name,
-        val.length,
-        `${val[0].data.listBefore.name} -> ${val[0].data.listAfter.name}`,
-      ]);
+    const dataOut = _.map(groupedOut, (val) => [
+      val[0].data.listBefore.name,
+      val[0].data.listAfter.name,
+      val.length,
+      `${val[0].data.listBefore.name} -> ${val[0].data.listAfter.name}`,
+    ]);
     const cardsOut = _.map(groupedOut, (val) => val);
 
     if (dataIn.length) {
@@ -115,29 +113,30 @@ class ListSankey extends React.Component {
     return (
       <div className="card-movement">
         <h3>Cards Moved In</h3>
-        <p><Stat val={moveInActions.length} /> card{ins ? 's' : ''} moved into this list during the period.</p>
+        <p>
+          <Stat val={moveInActions.length} /> card{ins ? 's' : ''} moved into this list during the
+          period.
+        </p>
 
-        { moveInActions.length > 0 &&
-          <div className="clickable-sankey" id="list-in-sankey" />
-        }
+        {moveInActions.length > 0 && <div className="clickable-sankey" id="list-in-sankey" />}
 
-        { this.state.selectedInFlow &&
+        {this.state.selectedInFlow && (
           <div className="horizontal-scroll" id="embedded-inflow-cards" />
-        }
-
+        )}
 
         <hr />
 
         <h3>Cards Moved Out</h3>
-        <p><Stat val={moveOutActions.length} /> card{outs ? 's': ''} moved out of this list during the period.</p>
+        <p>
+          <Stat val={moveOutActions.length} /> card{outs ? 's' : ''} moved out of this list during
+          the period.
+        </p>
 
-        { moveOutActions.length > 0 &&
-          <div className="clickable-sankey" id="list-out-sankey" />
-        }
+        {moveOutActions.length > 0 && <div className="clickable-sankey" id="list-out-sankey" />}
 
-        { this.state.selectedOutFlow &&
+        {this.state.selectedOutFlow && (
           <div className="horizontal-scroll" id="embedded-outflow-cards" />
-        }
+        )}
       </div>
     );
   }

@@ -1,6 +1,8 @@
+// @ts-check
+
 import _ from 'lodash';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import React from 'react';
 import Select from 'react-select';
 
@@ -33,8 +35,8 @@ class Board extends React.Component {
     const idBoard = t.arg('idBoard');
     this.loadBoard();
 
-    const since = moment().subtract(14, 'days').set(ZERO_HOUR);
-    const before = moment();
+    const since = DateTime.local().minus({ days: 14 }).set(ZERO_HOUR).toJSDate();
+    const before = new Date();
 
     this.state = {
       idBoard,
@@ -46,22 +48,21 @@ class Board extends React.Component {
   }
 
   componentDidMount() {
-    return t.get('member', 'private', 'token')
-      .then((token) => {
-        this.setState({ token });
-        this.loadBoardActions(this.state.idBoard, token, this.state.since, this.state.before);
-      });
+    return t.get('member', 'private', 'token').then((token) => {
+      this.setState({ token });
+      this.loadBoardActions(this.state.idBoard, token, this.state.since, this.state.before);
+    });
   }
 
   setSince(since) {
-    if (!since || !since.isValid()) {
+    if (!since) {
       return;
     }
     const { before } = this.state;
-    if (since.isAfter(before)) {
+    if (before < since) {
       return;
     }
-    if (before.diff(since, 'days') > 31) {
+    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days > 31) {
       console.error('31 days is maximum range');
       return;
     }
@@ -70,17 +71,17 @@ class Board extends React.Component {
   }
 
   setBefore(before) {
-    if (!before || !before.isValid()) {
+    if (!before) {
       return;
     }
     const { since } = this.state;
-    if (since.isAfter(before)) {
+    if (before < since) {
       return;
     }
-    if (before.isAfter(moment())) {
+    if (new Date() < before) {
       return;
     }
-    if (before.diff(since, 'days') > 31) {
+    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days > 31) {
       console.error('31 days is maximum range');
       return;
     }
@@ -89,16 +90,15 @@ class Board extends React.Component {
   }
 
   loadBoard() {
-    return Promise.join(
+    return Promise.all([
       t.board('id', 'name', 'members'),
       t.lists('id', 'name'),
-      t.cards('id', 'name', 'due', 'dueComplete', 'dateLastActivity')
-    )
-      .then(([board, lists, cards]) => {
-        board.cards = cards;
-        board.lists = lists.map((l, i) => _.extend(l, { pos: i }));
-        this.setState({ board });
-      });
+      t.cards('id', 'name', 'due', 'dueComplete', 'dateLastActivity'),
+    ]).then(([board, lists, cards]) => {
+      board.cards = cards;
+      board.lists = lists.map((l, i) => _.extend(l, { pos: i }));
+      this.setState({ board });
+    });
   }
 
   loadBoardActions(idBoard, token, since, before, pagedActions) {
@@ -121,20 +121,31 @@ class Board extends React.Component {
     fetch(`https://api.trello.com/1/boards/${idBoard}/actions?${qs}`)
       .then((resp) => resp.json())
       .then((actions) => {
-        const inRange = _.filter(actions, (a) =>
-          a.memberCreator != null && moment(new Date(a.date)).isAfter(moment().subtract(30, 'days')));
+        const inRange = _.filter(
+          actions,
+          (a) =>
+            a.memberCreator != null &&
+            new Date(a.date) > DateTime.local().minus({ days: 31 }).toJSDate()
+        );
 
         if (inRange.length === reqData.limit) {
           // all in range, request another page worth
-          this.loadBoardActions(idBoard, token, since, before, (pagedActions || []).concat(actions));
+          this.loadBoardActions(
+            idBoard,
+            token,
+            since,
+            before,
+            (pagedActions || []).concat(actions)
+          );
           return;
         }
 
         const normalized = _.map((pagedActions || []).concat(inRange), (a) =>
           _.extend(a, {
             type: normalizeAction(a),
-            doy: moment(new Date(a.date)).set(ZERO_HOUR).toISOString(),
-          }));
+            doy: DateTime.fromJSDate(new Date(a.date)).set(ZERO_HOUR).toISO(),
+          })
+        );
         const byType = _.groupBy(normalized, 'type');
         const byCreator = _(normalized)
           .groupBy('idMemberCreator')
@@ -164,9 +175,7 @@ class Board extends React.Component {
   render() {
     const { before, since, board, idTargetMember } = this.state;
     if (!this.state.actions || !board) {
-      return (
-        <p>Loading activity on the board...</p>
-      );
+      return <p>Loading activity on the board...</p>;
     }
 
     const actions = this.state.actions.normalized;
@@ -178,23 +187,23 @@ class Board extends React.Component {
           <DatePicker
             id="since-picker"
             selected={since}
+            onChange={(date) => this.setSince(date)}
             selectsStart
             startDate={since}
             endDate={before}
-            minDate={before.clone().subtract(31, 'days')}
-            maxDate={before.clone().subtract(1, 'day')}
-            onChange={(since) => this.setSince(since)}
+            minDate={DateTime.fromJSDate(before).minus({ days: 31 }).toJSDate()}
+            maxDate={DateTime.fromJSDate(before).minus({ days: 1 }).toJSDate()}
           />
           <label htmlFor="before-picker">To: </label>
           <DatePicker
             id="before-picker"
             selected={before}
+            onChange={(date) => this.setBefore(date)}
             selectsEnd
             startDate={since}
             endDate={before}
-            minDate={since.clone().add(1, 'day')}
-            maxDate={moment()}
-            onChange={(before) => this.setBefore(before)}
+            maxDate={new Date()}
+            minDate={since}
           />
         </div>
 
@@ -204,8 +213,13 @@ class Board extends React.Component {
             className="member-select"
             isClearable
             isSearchable
-            options={board.members.map((m) => ({ value: m.id, label: m.fullName }))}
-            onChange={(selectedMember) => this.setState({ idTargetMember: (selectedMember || {}).value })}
+            options={board.members.map((m) => ({
+              value: m.id,
+              label: m.fullName,
+            }))}
+            onChange={(selectedMember) =>
+              this.setState({ idTargetMember: (selectedMember || {}).value })
+            }
           />
         </div>
 
@@ -219,7 +233,7 @@ class Board extends React.Component {
 
         <hr />
 
-        { !idTargetMember && (
+        {!idTargetMember && (
           <div>
             <MostActiveMembers
               actions={actions || []}
@@ -233,7 +247,9 @@ class Board extends React.Component {
         )}
 
         <RadarActivity
-          cardCreateActions={this.filteredActions((byType.createCard || []).concat(byType.emailCard || []).concat(byType.copyCard || []))}
+          cardCreateActions={this.filteredActions(
+            (byType.createCard || []).concat(byType.emailCard || []).concat(byType.copyCard || [])
+          )}
           archiveCardActions={this.filteredActions(byType['updateCard:closed'])}
           lists={board.lists}
         />
@@ -247,7 +263,7 @@ class Board extends React.Component {
 
         <hr />
 
-        { !idTargetMember && (
+        {!idTargetMember && (
           <div>
             <MostMentionedMembers
               commentCardActions={byType.commentCard || []}
@@ -255,13 +271,10 @@ class Board extends React.Component {
             />
             <hr />
 
-            <NewBoardMembers
-              addMemberToBoardActions={byType.addMemberToBoard || []}
-            />
+            <NewBoardMembers addMemberToBoardActions={byType.addMemberToBoard || []} />
             <hr />
           </div>
         )}
-
 
         <MostActiveCards
           actions={this.filteredActions(actions || [])}

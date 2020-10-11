@@ -9,12 +9,11 @@
     "lint": "prettier --check app/"
   },
   "dependencies": {
-    "@atlaskit/datetime-picker": "^10.0.5",
     "frappe-charts": "^1.5.2",
     "lodash": "^4.17.20",
-    "moment": "^2.29.1",
+    "luxon": "^1.25.0",
     "react": "16.13.1",
-    "react-datepicker": "3.2.2",
+    "react-datepicker": "^3.2.2",
     "react-dom": "16.13.1",
     "react-select": "^3.1.0",
     "react-tooltip": "4.2.10",

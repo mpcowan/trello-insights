@@ -34,7 +34,10 @@ class RadarActivity extends React.Component {
       const { list } = createAction.data;
       if (!byIdList[list.id]) {
         byIdList[list.id] = {
-          id: list.id, name: list.name, created: 0, archived: 0,
+          id: list.id,
+          name: list.name,
+          created: 0,
+          archived: 0,
         };
       }
       byIdList[list.id].created += 1;
@@ -49,7 +52,10 @@ class RadarActivity extends React.Component {
       const { list } = archiveAction.data;
       if (!byIdList[list.id]) {
         byIdList[list.id] = {
-          id: list.id, name: list.name, created: 0, archived: 0,
+          id: list.id,
+          name: list.name,
+          created: 0,
+          archived: 0,
         };
       }
       byIdList[list.id].archived += 1;
@@ -67,7 +73,10 @@ class RadarActivity extends React.Component {
         const list = lists[i];
         if (!byIdList[list.id]) {
           byIdList[list.id] = {
-            id: list.id, name: list.name, created: 0, archived: 0,
+            id: list.id,
+            name: list.name,
+            created: 0,
+            archived: 0,
           };
         }
         i += 1;
@@ -85,7 +94,7 @@ class RadarActivity extends React.Component {
         <Select
           className="facet-selector"
           options={views}
-          onChange={(s) => this.setState({ facet: (s || views[0]) })}
+          onChange={(s) => this.setState({ facet: s || views[0] })}
           value={facet || 'created'}
         />
         <ResponsiveContainer width="100%" height={480}>
@@ -94,7 +103,13 @@ class RadarActivity extends React.Component {
             <PolarAngleAxis dataKey="name" />
             <PolarRadiusAxis />
             <Tooltip />
-            <Radar name={facet.label} dataKey={facet.value} stroke="#0082A0" fill="#00AECC" fillOpacity={0.6} />
+            <Radar
+              name={facet.label}
+              dataKey={facet.value}
+              stroke="#0082A0"
+              fill="#00AECC"
+              fillOpacity={0.6}
+            />
           </RadarChart>
         </ResponsiveContainer>
       </div>
@@ -102,4 +117,4 @@ class RadarActivity extends React.Component {
   }
 }
 
-export default RadarActivity
+export default RadarActivity;

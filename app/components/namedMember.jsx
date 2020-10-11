@@ -13,9 +13,7 @@ export default function ({ member, hideName, horizontal, stat }) {
             alt={combinedNames}
             title={combinedNames}
           />
-          { !hideName &&
-            <span>{ `@${member.username}` }</span>
-          }
+          {!hideName && <span>{`@${member.username}`}</span>}
         </div>
       );
     }
@@ -39,7 +37,9 @@ export default function ({ member, hideName, horizontal, stat }) {
   if (horizontal) {
     return (
       <div className="named-member horizontal">
-        <span className="member-initials" title={combinedNames}>{member.initials}</span>
+        <span className="member-initials" title={combinedNames}>
+          {member.initials}
+        </span>
         <div>
           <h4>{member.fullName}</h4>
           <p className="u-quiet">{`@${member.username}`}</p>
@@ -51,10 +51,10 @@ export default function ({ member, hideName, horizontal, stat }) {
 
   return (
     <div className="named-member">
-      <span className="member-initials" title={combinedNames}>{member.initials}</span>
-      { !hideName &&
-        <span>{ `@${member.username}` }</span>
-      }
+      <span className="member-initials" title={combinedNames}>
+        {member.initials}
+      </span>
+      {!hideName && <span>{`@${member.username}`}</span>}
     </div>
   );
-};
+}
