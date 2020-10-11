@@ -6,16 +6,9 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } fro
 import React from 'react';
 import Stat from './stat';
 
-const ZERO_HOUR = {
-  hour: 0,
-  minute: 0,
-  second: 0,
-  millisecond: 0,
-};
-
 export default function ({ actions, actionsByCreator, board, before, since }) {
   const hist = _.groupBy(actions, 'doy');
-  let i = DateTime.fromJSDate(since).set(ZERO_HOUR);
+  let i = DateTime.fromJSDate(since).startOf('day');
   while (i < DateTime.fromJSDate(before)) {
     const iso = i.toISO();
     if (hist[iso] == null) {
@@ -35,7 +28,7 @@ export default function ({ actions, actionsByCreator, board, before, since }) {
 
   const membersPlural = actionsByCreator.length !== 1;
   const actionsPlural = actions.length !== 1;
-  const rangeInDays = DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days;
+  const rangeInDays = Math.round(DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days);
 
   return (
     <div className="summary">
