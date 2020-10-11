@@ -10,7 +10,6 @@ import React from 'react';
 import normalizeAction from './utils/normalizeAction';
 
 import Assigned from './components/assigned';
-import Attachments from './components/attachments';
 import CardAge from './components/card-age';
 import InFlows from './components/inFlows';
 import ListStats from './components/list-stats';
@@ -212,10 +211,6 @@ class List extends React.Component {
           <hr />
 
           <OverdueCards cards={list.cards} />
-
-          <hr />
-
-          <Attachments cards={list.cards} />
         </div>
       );
     } else if (this.state.tab === 'activity') {
