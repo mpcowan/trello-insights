@@ -62,7 +62,7 @@ class Board extends React.Component {
     if (before < since) {
       return;
     }
-    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days > 31) {
+    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days >= 32) {
       console.error('31 days is maximum range');
       return;
     }
@@ -81,7 +81,7 @@ class Board extends React.Component {
     if (new Date() < before) {
       return;
     }
-    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days > 31) {
+    if (DateTime.fromJSDate(before).diff(DateTime.fromJSDate(since), 'days').days >= 32) {
       console.error('31 days is maximum range');
       return;
     }
