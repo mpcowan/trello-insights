@@ -44,7 +44,7 @@ class DueComplete extends React.Component {
                 <NamedMember
                   member={action.memberCreator}
                   horizontal
-                  stat={action.date.toLocaleDateString(undefined, {
+                  stat={new Date(action.date).toLocaleDateString(undefined, {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric',

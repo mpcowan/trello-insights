@@ -10,7 +10,7 @@ export default function ({ addMemberToBoardActions }) {
   const added = _.filter(addMemberToBoardActions, (a) => a.idMemberCreator !== a.member.id);
   const joined = _.filter(addMemberToBoardActions, (a) => a.idMemberCreator === a.member.id);
   const newMembers = _(addMemberToBoardActions)
-    .map((a) => _.extend(a.member, { date: a.date }))
+    .map((a) => _.extend(a.member, { date: new Date(a.date) }))
     .uniqBy('id')
     .value();
 
