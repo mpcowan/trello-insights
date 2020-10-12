@@ -6,7 +6,7 @@
     "build": "parcel build app/pages/*.html",
     "dev": "parcel app/pages/*.html",
     "format": "prettier --write app/",
-    "lint": "prettier --check app/"
+    "lint": "eslint app/"
   },
   "dependencies": {
     "lodash": "^4.17.20",
@@ -22,9 +22,30 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.4",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.5.0",
     "prettier": "^2.1.2"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    },
+    "extends": [
+      "airbnb/base",
+      "plugin:prettier/recommended"
+    ],
+    "parser": "babel-eslint",
+    "plugins": [
+      "prettier"
+    ]
   },
   "prettier": {
     "printWidth": 100,
