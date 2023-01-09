@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "luxon": "^1.25.0",
+    "luxon": "^1.28.1",
     "react": "16.13.1",
     "react-datepicker": "^3.2.2",
     "react-dom": "16.13.1",
