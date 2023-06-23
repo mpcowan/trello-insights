@@ -18,15 +18,10 @@
         window.location.host +
         '%2Fauth-success.html';
 
-      var tokenLooksValid = function (token) {
-        return /^[0-9a-f]{64}$/.test(token);
-      };
-
       document.getElementById('auth-btn').addEventListener('click', function () {
         t.authorize(trelloAuthUrl, {
           height: 680,
           width: 580,
-          validToken: tokenLooksValid,
         })
           .then(function (token) {
             // store the token in Trello private Power-Up storage
